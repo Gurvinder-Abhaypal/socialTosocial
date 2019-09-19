@@ -1,14 +1,22 @@
 <div class="main-content">
-  <div class="main-label">
-      <label> Enter the keyword to search</label>
-  </div>
-  <div class="main-search">
-      <form (submit)="onSubmit()">
-          <input #inputBar [(ngModel)]="input" [ngModelOptions]="{standalone: true}">
-       </form>
+  <div class="main-label text-center mt-5 mb-2">
+    <label> Enter the keyword to search</label>
   </div>
   <div>
-    <div *ngFor="let item of result"><a href="{{item.link}}">{{item.link}}</a></div>
+    <form (submit)="loadData()">
+      <div class="row">
+        <div class="col-6 offset-3">
+          <input class="form-control" #inputBar [(ngModel)]="input" [ngModelOptions]="{standalone: true}">
+        </div>
+      </div>
+    </form>
   </div>
-
+  <div class="row">
+    <div *ngIf="!noResultFound" class="col-8 offset-3 mt-3">
+      <div class="result-links" *ngFor="let item of result"><a href="{{item}}">{{item}}</a></div>
+    </div>
+    <div class="font-weight-bold mt-5 text-center text-primary w-100" *ngIf="noResultFound"> <span>No Results Found !!</span></div>
+  </div>
+  <div *ngIf="showMore" class="text-center"><button class="btn btn-primary m-2" (click)="loadData()">Show More</button>
+  </div>
 </div>

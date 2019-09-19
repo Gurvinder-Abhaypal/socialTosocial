@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { GetUrlStatusService } from './services/get-url-status.service';
-import { SitesList } from './Models/social-sites-list';
+import { SitesList } from './Models/helper';
 
 @Component({
   selector: 'app-root',
@@ -10,9 +10,13 @@ import { SitesList } from './Models/social-sites-list';
 export class AppComponent {
   title = 'demo-app';
   urlPath: string;
-  result: any;
+  result = [];
   sitesList = new SitesList();
   input = '';
+  showMore: boolean;
+  startIndex = 1;
+  prevValue: string;
+  noResultFound: boolean;
   // @ViewChild('inputBar') inputBar: any;
 
   constructor(private getUrlStatusService: GetUrlStatusService) {
@@ -21,13 +25,38 @@ export class AppComponent {
 
   onKey(event: any) {
     this.input += event.target.value;
+    if (this.input.length === 0) {
+      this.resetSearch();
+    }
   }
 
-  onSubmit() {
-    this.getUrlStatusService.getUrlStatus(this.sitesList.googleapilink + '&q=' + this.input).subscribe(res => {
-      this.result = res.body.items;
-    },() => {}, () => {
-      this.input = '';
-    });
+  loadData() {
+    if (this.prevValue !== undefined && this.result.length > 0 && this.prevValue !== this.input) {
+      this.resetSearch();
+    }
+    if (this.input.length > 0) {
+      // tslint:disable-next-line: max-line-length
+      this.getUrlStatusService.getUrlStatus(this.sitesList.googleapilink + '&q=' + this.input + '&start=' + this.startIndex).subscribe(res => {
+        if (res.body.items !== undefined) {
+          res.body.items.forEach(element => {
+            this.result.push(element.link);
+          });
+          // this.result += res.body.items;
+          this.startIndex = res.body.queries.nextPage[0].startIndex;
+          if (+res.body.searchInformation.totalResults > 10) {
+            this.showMore = true;
+          }
+        } else {
+          this.noResultFound = true;
+        }
+      });
+      this.prevValue = this.input;
+    }
+  }
+
+  resetSearch() {
+    this.startIndex = 1;
+    this.result = [];
+    this.showMore = false;
   }
 }
