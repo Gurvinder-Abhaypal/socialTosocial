@@ -1,9 +1,14 @@
 <div class="main-content">
   <div class="main-label">
-      <label> Enter the URL to search</label>
+      <label> Enter the keyword to search</label>
   </div>
   <div class="main-search">
-      <input type="url" placeholder="Enter the URL here.." (change)="inputEntered($event)"/>
+      <form (submit)="onSubmit()">
+          <input #inputBar [(ngModel)]="input" [ngModelOptions]="{standalone: true}">
+       </form>
+  </div>
+  <div>
+    <div *ngFor="let item of result"><a href="{{item.link}}">{{item.link}}</a></div>
   </div>
 
 </div>
