@@ -1,6 +1,6 @@
 <div class="main-content">
   <div class="main-label text-center mt-5 mb-2">
-    <label> Enter the keyword to search</label>
+    <label> Enter the URL to search</label>
   </div>
   <div>
     <form (submit)="loadData()">
@@ -13,7 +13,7 @@
   </div>
   <div class="row">
     <div *ngIf="!noResultFound" class="col-8 offset-3 mt-3">
-      <div class="result-links" *ngFor="let item of result"><a href="{{item}}">{{item}}</a></div>
+      <div class="result-links" *ngFor="let item of result"><a href="{{item}}" target="_blank">{{item}}</a></div>
     </div>
     <div class="font-weight-bold mt-5 text-center text-primary w-100" *ngIf="noResultFound"> <span>No Results Found !!</span></div>
   </div>
